@@ -26,8 +26,8 @@ targets:
     workspace:
       host: https://adb-7405616585742809.9.azuredatabricks.net
     variables:
-      catalog: dbx_adventureworks_sandbox
-      schema: dev
+      catalog: dev_silver
+      schema: sales
   prod:
     mode: production
     workspace:
@@ -35,8 +35,8 @@ targets:
       # We explicitly deploy to /Workspace/Users/randallsuarez@adventureworkshkd.onmicrosoft.com to make sure we only have a single copy.
       root_path: /Workspace/Users/randallsuarez@adventureworkshkd.onmicrosoft.com/.bundle/${bundle.name}/${bundle.target}
     variables:
-      catalog: dbx_adventureworks_sandbox
-      schema: prod
+      catalog: dev_silver
+      schema: sales
     permissions:
       - user_name: randallsuarez@adventureworkshkd.onmicrosoft.com
         level: CAN_MANAGE
