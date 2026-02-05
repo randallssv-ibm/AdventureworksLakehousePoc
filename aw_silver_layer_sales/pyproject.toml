@@ -1,5 +1,5 @@
 [project]
-name = "aw_silver_layer_models"
+name = "aw_silver_layer_sales"
 version = "0.0.1"
 authors = [{ name = "randallsuarez@adventureworkshkd.onmicrosoft.com" }]
 requires-python = ">=3.10,<3.13"
@@ -21,7 +21,7 @@ dev = [
 ]
 
 [project.scripts]
-main = "aw_silver_layer_models.main:main"
+main = "aw_silver_layer_sales.main:main"
 
 [build-system]
 requires = ["hatchling"]

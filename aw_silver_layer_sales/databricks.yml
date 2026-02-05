@@ -1,7 +1,7 @@
 # This is a Databricks asset bundle definition for aw_silver_layer_models.
 # See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
 bundle:
-  name: aw_silver_layer_models
+  name: aw_silver_layer_sales
   uuid: 301b0e25-7497-434a-837f-fba12dfa4a05
 
 include:

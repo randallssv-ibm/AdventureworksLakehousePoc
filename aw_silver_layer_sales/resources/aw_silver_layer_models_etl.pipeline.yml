@@ -1,17 +1,17 @@
-# The main pipeline for aw_silver_layer_models
+# The main pipeline for aw_silver_layer_sales
 
 resources:
   pipelines:
-    aw_silver_layer_models_etl:
-      name: aw_silver_layer_models_sales
+    aw_silver_layer_sales:
+      name: aw_silver_layer_sales
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
-      root_path: "../src/aw_silver_layer_models_etl"
+      root_path: "../src/aw_silver_layer_sales"
 
       libraries:
         - glob:
-            include: ../src/aw_silver_layer_models_etl/transformations/**
+            include: ../src/aw_silver_layer_sales/transformations/**
 
       environment:
         dependencies:
