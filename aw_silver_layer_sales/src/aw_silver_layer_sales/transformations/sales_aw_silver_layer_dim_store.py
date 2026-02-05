@@ -2,21 +2,21 @@ import dlt
 from pyspark.sql.functions import col, greatest, expr
 
 @dlt.table(
-    name="dim_store_watermarked",
+    name="dim_store",
     comment="High-frequency refresh using 5min watermark and 2min windows for stream-stream join."
 )
 def dim_store_watermarked():
     # 1. Customer Stream: 5-minute threshold for late data
     customer_df = (
         dlt.read_stream("dev_bronze.stg_sales.stg_customer")
-        .withWatermark("modified_date", "5 minutes")
+        .withWatermark("ModifiedDate", "5 minutes")
         .alias("c")
     )
 
     # 2. Store Stream: 5-minute threshold for late data
     store_df = (
         dlt.read_stream("dev_bronze.stg_sales.stg_store")
-        .withWatermark("modified_date", "5 minutes")
+        .withWatermark("ModifiedDate", "5 minutes")
         .alias("s")
     )
 
