@@ -1,0 +1,20 @@
+# The main pipeline for aw_silver_layer_models
+
+resources:
+  pipelines:
+    aw_silver_layer_models_etl:
+      name: aw_silver_layer_models_etl
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      root_path: "../src/aw_silver_layer_models_etl"
+
+      libraries:
+        - glob:
+            include: ../src/aw_silver_layer_models_etl/transformations/**
+
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
