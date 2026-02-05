@@ -1,4 +1,4 @@
-import pipelines as dp
+from pyspark import pipelines as dp
 from pyspark.sql.functions import col, concat_ws, trim, regexp_replace, coalesce, greatest, when, lit
 
 @dp.table(

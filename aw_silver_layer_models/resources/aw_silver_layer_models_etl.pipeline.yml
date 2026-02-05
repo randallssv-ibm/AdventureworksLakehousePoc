@@ -3,7 +3,7 @@
 resources:
   pipelines:
     aw_silver_layer_models_etl:
-      name: aw_silver_layer_models_etl
+      name: aw_silver_layer_models_sales
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
