@@ -2,7 +2,7 @@ from pyspark import pipelines as dp
 from pyspark.sql.functions import col, concat_ws, trim, regexp_replace, coalesce, greatest, when, lit
 
 @dp.table(
-    name="dim_individual_customer",
+    name="dim_customer",
     comment="Dimensional model for Individual Customers, joining Bronze Staging Sales and Person data."
 )
 def dim_individual_customer():
