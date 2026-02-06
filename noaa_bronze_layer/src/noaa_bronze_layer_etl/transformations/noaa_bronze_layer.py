@@ -125,18 +125,6 @@ def noaa_weather_metrics_timeseries():
     Note: Full dataset is 30GB+. For POC, filter to specific year(s) or states.
     """
     
-    # Variable name mapping (matches Snowflake)
-    variable_mapping = {
-        "TMAX": "Maximum Temperature",
-        "TMIN": "Minimum Temperature",
-        "PRCP": "Precipitation",
-        "SNOW": "Snowfall",
-        "SNWD": "Snow Depth",
-        "AWND": "Average Wind Speed",
-        "TAVG": "Average Temperature",
-        "WSFG": "Peak Gust Wind Speed"
-    }
-    
     # For POC: Read specific year (e.g., 2023)
     # Full path pattern: s3://noaa-ghcn-pds/csv/by_year/YYYY.csv
     df_weather_raw = spark.read.csv(
@@ -158,8 +146,15 @@ def noaa_weather_metrics_timeseries():
     return df_weather_raw.select(
         F.col("station_id").alias("noaa_weather_station_id"),
         F.col("element").alias("variable"),
-        F.when(F.col("element").isin(list(variable_mapping.keys())), 
-               F.lit(variable_mapping[F.col("element")]))
+        # Fixed: Use when/otherwise chain instead of dictionary lookup
+        F.when(F.col("element") == "TMAX", F.lit("Maximum Temperature"))
+         .when(F.col("element") == "TMIN", F.lit("Minimum Temperature"))
+         .when(F.col("element") == "PRCP", F.lit("Precipitation"))
+         .when(F.col("element") == "SNOW", F.lit("Snowfall"))
+         .when(F.col("element") == "SNWD", F.lit("Snow Depth"))
+         .when(F.col("element") == "AWND", F.lit("Average Wind Speed"))
+         .when(F.col("element") == "TAVG", F.lit("Average Temperature"))
+         .when(F.col("element") == "WSFG", F.lit("Peak Gust Wind Speed"))
          .otherwise(F.col("element")).alias("variable_name"),
         F.to_date(F.col("date"), "yyyyMMdd").alias("date"),
         F.to_timestamp(F.col("date"), "yyyyMMdd").alias("datetime"),
