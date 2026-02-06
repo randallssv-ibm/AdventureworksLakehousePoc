@@ -1,5 +1,4 @@
 # The main pipeline for adventureworks_dab_poc
-
 resources:
   pipelines:
     adventureworks_dab_poc_etl:
@@ -7,12 +6,10 @@ resources:
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
-      root_path: "../src/adventureworks
-
+      root_path: "../src/adventureworks"  # <-- Added closing quote
       libraries:
         - glob:
             include: ../src/adventureworks/transformations/**
-
       environment:
         dependencies:
           # We include every dependency defined by pyproject.toml by defining an editable environment
