@@ -24,8 +24,8 @@ def Fact_weather():
         )
 
     # 2. Lectura de Clima (Estático - stg_noaa)
-    df_timeseries = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_metrics_timeseries")
-    df_stations = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_us_stations")
+    df_timeseries = spark.readStream.table("dev_bronze.stg_noaa.raw_noaa_weather_metrics_timeseries")
+    df_stations = spark.readStream.table("dev_bronze.stg_noaa.raw_noaa_weather_us_stations")
 
     # 3. Lógica de Negocio: Refinado de Clima (weather)
     # SIN filtro de años. Se procesa toda la data histórica disponible.
