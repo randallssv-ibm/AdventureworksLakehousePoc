@@ -2,62 +2,40 @@ from pyspark.sql import functions as F
 from pyspark import pipelines as dp
 
 @dp.table(
-    name="Fact_weather",
-    comment="Tabla de hechos climática. Geografía vía streaming y métricas NOAA sin filtros temporales."
+    name="fact_weather",
+    comment="Silver layer weather fact table aggregated by state and date"
 )
-
-def Fact_weather():
-    # 1. Lectura de Geografía en Streaming (stg_person)
-    # Se leen como stream para capturar cambios en direcciones o divisiones políticas
-    df_address = spark.read.table("dev_bronze.stg_person.stg_address").alias("a")
-    df_state = spark.read.table("dev_bronze.stg_person.stg_stateprovince").alias("s")
-    df_country = spark.read.table("dev_bronze.stg_person.stg_countryregion").alias("c")
-
-    # Reconstrucción de la dimensión geográfica usando los alias
-    df_geo = df_address \
-        .join(df_state, F.col("a.StateProvinceID") == F.col("s.StateProvinceID")) \
-        .join(df_country, F.col("s.CountryRegionCode") == F.col("c.CountryRegionCode")) \
-        .select(
-            F.col("a.City").alias("city"),
-            F.col("a.PostalCode").alias("postal_code"),
-            F.col("c.Name").alias("country_region") # El nombre del país viene de la tabla 'c'
-        )
-
-    # 2. Lectura de Clima 
-    df_timeseries = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_metrics_timeseries")
-    df_stations = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_us_stations")
-
-    # 3. Lógica de Negocio: Refinado de Clima (weather)
-    # SIN filtro de años. Se procesa toda la data histórica disponible.
-    weather_refined = df_timeseries.join(
-            df_stations, 
-            "noaa_weather_station_id"
-        ) \
-        .filter(
-            F.col("variable").isin(
-                'average_temperature', 'average_wind_speed', 
-                'average_relative_humidity', 'precipitation', 'snowfall'
-            )
-        ) \
-        .withColumn("variable", F.upper(F.col("variable"))) \
-        .groupBy("state_name", "country_name", "zip_name", "date", "variable") \
-        .agg(F.avg("value").alias("avg_value"))
-
-    # 4. Join y Pivotado
-    fact_weather= df_geo.join(
-            weather_refined,
-            (df_geo.country_region == weather_refined.country_name) &
-            (df_geo.postal_code == weather_refined.zip_name),
-            "inner"
-        ) \
-        .groupBy("city", "postal_code", "date") \
-        .pivot("variable", [
-            "AVERAGE_TEMPERATURE", 
-            "AVERAGE_WIND_SPEED", 
-            "AVERAGE_RELATIVE_HUMIDITY", 
-            "PRECIPITATION", 
-            "SNOWFALL"
-        ]) \
-        .avg("avg_value")
-
-    return fact_weather
+def fact_weather():
+    #aggregate by state_geo_id and date
+    ts = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_metrics_timeseries").alias("ts")
+    idx = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_us_stations").alias("idx")
+    
+    weather = ts.join(
+        idx,
+        F.col("ts.noaa_weather_station_id") == F.col("idx.noaa_weather_station_id"),
+        "inner"
+    ).filter((F.col("ts.variable").isin(["TAVG", "AWND", "PRCP", "SNOW"]))
+    ).groupBy(
+        F.col("idx.state_geo_id"),
+        F.col("ts.date"),
+        F.upper(F.col("ts.variable")).alias("variable")
+    ).agg(
+        F.avg(F.col("ts.value")).alias("avg_value")
+    )
+    
+    # Pivot
+    pivot = weather.groupBy("state_geo_id", "date").pivot(
+        "variable",
+        ["TAVG", "AWND", "PRCP", "SNOW"]
+    ).agg(
+        F.avg("avg_value")
+    )
+    
+    return pivot.select(
+        F.col("state_geo_id"),
+        F.col("date"),
+        F.col("TAVG").alias("average_temperature"),
+        F.col("AWND").alias("average_wind_speed"),
+        F.col("PRCP").alias("precipitation"),
+        F.col("SNOW").alias("snowfall")
+    )
