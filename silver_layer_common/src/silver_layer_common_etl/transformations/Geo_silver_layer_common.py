@@ -9,9 +9,9 @@ from pyspark import pipelines as dp
 def Fact_weather():
     # 1. Lectura de Geografía en Streaming (stg_person)
     # Se leen como stream para capturar cambios en direcciones o divisiones políticas
-    df_address_stream = spark.readStream.table("dev_bronze.stg_person.stg_address").alias("a")
-    df_state_stream = spark.readStream.table("dev_bronze.stg_person.stg_stateprovince").alias("s")
-    df_country_stream = spark.readStream.table("dev_bronze.stg_person.stg_countryregion").alias("c")
+    df_address_stream = spark.read.table("dev_bronze.stg_person.stg_address").alias("a")
+    df_state_stream = spark.read.table("dev_bronze.stg_person.stg_stateprovince").alias("s")
+    df_country_stream = spark.read.table("dev_bronze.stg_person.stg_countryregion").alias("c")
 
     # Reconstrucción de la dimensión geográfica usando los alias
     df_geo_stream = df_address_stream \
@@ -24,8 +24,8 @@ def Fact_weather():
         )
 
     # 2. Lectura de Clima (Estático - stg_noaa)
-    df_timeseries = spark.readStream.table("dev_bronze.stg_noaa.raw_noaa_weather_metrics_timeseries")
-    df_stations = spark.readStream.table("dev_bronze.stg_noaa.raw_noaa_weather_us_stations")
+    df_timeseries = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_metrics_timeseries")
+    df_stations = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_us_stations")
 
     # 3. Lógica de Negocio: Refinado de Clima (weather)
     # SIN filtro de años. Se procesa toda la data histórica disponible.
