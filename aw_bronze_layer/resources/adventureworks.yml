@@ -1,15 +1,15 @@
-# The main pipeline for adventureworks_dab_poc
+# The main pipeline for aw_bronze_layer
 resources:
   pipelines:
-    adventureworks_dab_poc_etl:
-      name: adventureworks
+    aw_bronze_layer_etl:
+      name: aw_bronze_layer
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
-      root_path: "../src/adventureworks"  # <-- Added closing quote
+      root_path: "../src/adventureworks"
       libraries:
-        - glob:
-            include: ../src/adventureworks/transformations/**
+        - notebook:
+            path: ../src/adventureworks/BronzeLayer/bronze_structure
       environment:
         dependencies:
           # We include every dependency defined by pyproject.toml by defining an editable environment
