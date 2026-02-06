@@ -1,7 +1,7 @@
-# This is a Databricks asset bundle definition for adventureworks_dab_poc.
+# This is a Databricks asset bundle definition for aw_bronze_layer.
 # See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
 bundle:
-  name: adventureworks_dab_poc
+  name: aw_bronze_layer
   uuid: 6c5296cc-33f1-4429-80f6-2e4cf44bde51
 
 include:

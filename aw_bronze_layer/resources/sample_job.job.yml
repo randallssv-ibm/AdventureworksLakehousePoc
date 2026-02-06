@@ -1,4 +1,4 @@
-# A sample job for adventureworks_dab_poc.
+# A sample job for aw_bronze_layer.
 
 resources:
   jobs:
@@ -24,7 +24,7 @@ resources:
       tasks:
         - task_key: refresh_pipeline
           pipeline_task:
-            pipeline_id: ${resources.pipelines.adventureworks_dab_poc_etl.id}
+            pipeline_id: ${resources.pipelines.aw_bronze_layer_etl.id}
 
       environments:
         - environment_key: default

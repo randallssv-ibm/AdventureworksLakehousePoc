@@ -3,15 +3,15 @@
 resources:
   pipelines:
     adventureworks_dab_poc_etl:
-      name: adventureworks_dab_poc_etl
+      name: adventureworks
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
-      root_path: "../src/adventureworks_dab_poc_etl"
+      root_path: "../src/adventureworks
 
       libraries:
         - glob:
-            include: ../src/adventureworks_dab_poc_etl/transformations/**
+            include: ../src/adventureworks/transformations/**
 
       environment:
         dependencies:

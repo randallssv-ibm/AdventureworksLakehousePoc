@@ -1,5 +1,5 @@
 [project]
-name = "adventureworks_dab_poc"
+name = "aw_bronze_layer"
 version = "0.0.1"
 authors = [{ name = "randallsuarez@adventureworkshkd.onmicrosoft.com" }]
 requires-python = ">=3.10,<3.13"
@@ -21,7 +21,7 @@ dev = [
 ]
 
 [project.scripts]
-main = "adventureworks_dab_poc.main:main"
+main = "aw_bronze_layer.main:main"
 
 [build-system]
 requires = ["hatchling"]
