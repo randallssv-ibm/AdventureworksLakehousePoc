@@ -9,7 +9,7 @@ resources:
       root_path: "../src/adventureworks"
       libraries:
         - notebook:
-            path: ../src/adventureworks/BronzeLayer/bronze_structure
+            path: ../src/adventureworks/BronzeLayer/bronze_structure.ipynb  # <-- Added .ipynb
       environment:
         dependencies:
           # We include every dependency defined by pyproject.toml by defining an editable environment
