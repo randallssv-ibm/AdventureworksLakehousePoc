@@ -2,29 +2,23 @@ from pyspark import pipelines as dp
 from pyspark.sql import functions as F
 
 @dp.table(
-    name = "dim_person",
-    comment="Dimensional model for Person data."
+    name = "dim_geo",
+    comment= """provides a detailed view of geographical information related
+    to individuals, including city, state, province, and country details. It is used to enrich personal data with geographical context, aiding in location-based analysis and reporting."""
 )
-def sample_trips_silver_layer_person():
-    # 1. Setup Streaming Reads
+def silver_layer_person():
+
+    #readings from bronze
+    # 1. ONLY Address is a stream (The driving table)
     address = (
         spark.readStream.table("dev_bronze.stg_person.stg_address")
         .withWatermark("ModifiedDate", "5 minutes")
         .alias("a")
     )
-    state_province = (
-        spark.readStream.table("dev_bronze.stg_person.stg_stateprovince")
-        .withWatermark("ModifiedDate", "5 minutes")
-        .alias("sp")
-    )
-    country_region = (
-        spark.readStream.table("dev_bronze.stg_person.stg_countryregion")
-        .withWatermark("ModifiedDate", "5 minutes")
-        .alias("cr")
-    )
+    state_province = dp.read("dev_bronze.stg_person.stg_stateprovince").alias("sp")
+    country_region = dp.read("dev_bronze.stg_person.stg_countryregion").alias("cr")
 
-    # 2. Join and Aggregate
-    # In PySpark, we use .agg() for the max() logic and .alias() for renaming
+    # 3. Join and Select
     return (
         address
         .join(
@@ -37,16 +31,12 @@ def sample_trips_silver_layer_person():
             F.col("sp.CountryRegionCode") == F.col("cr.CountryRegionCode"),
             "left"
         )
-        .groupBy(
-            F.col("a.City"),
+        .select(
+            F.concat(F.col("a.AddressID"), F.lit("_"), F.col("a.PostalCode")).alias("geography_key"),
+            F.col("a.City").alias("city"),
             F.col("sp.Name").alias("state_province"),
-            F.col("sp.StateProvinceCode").alias("satate_province_code"),,
+            F.col("sp.StateProvinceCode").alias("state_province_code"),
             F.col("cr.Name").alias("country_region"),
-            F.col("a.PostalCode").alias("postal_code"),
-        )
-        .agg(
-            F.max(
-                F.concat(F.col("a.AddressID"), F.lit("_"), F.col("a.PostalCode"))
-            ).alias("geography_key")
+            F.col("a.PostalCode").alias("postal_code")
         )
     )
