@@ -13,8 +13,8 @@ def dim_product():
     )
 
     # 2. Lookups estáticos para evitar errores de Stream-Stream Join
-    product_subcategory = dp.read("dev_bronze.stg_production.stg_product_subcategory").alias("ps")
-    product_category = dp.read("dev_bronze.stg_production.stg_product_category").alias("pc")
+    product_subcategory = dp.read("dev_bronze.stg_production.stg_productsubcategory").alias("ps")
+    product_category = dp.read("dev_bronze.stg_production.stg_productcategory").alias("pc")
 
     # 3. Transformación y Joins
     return (
