@@ -33,10 +33,10 @@ targets:
     workspace:
       host: https://dbc-9d243762-f625.cloud.databricks.com
       # We explicitly deploy to /Workspace/Users/randallsuarez@adventureworkshkd.onmicrosoft.com to make sure we only have a single copy.
-      root_path: /Workspace/Users/randallsuarez@adventureworkshkd.onmicrosoft.com/.bundle/${bundle.name}/${bundle.target}
+      root_path: /Workspace/Users/randall.suarez@ibm.com/.bundle/${bundle.name}/${bundle.target}
     variables:
       catalog: hkd-bronze-poc
       schema: prod
     permissions:
-      - user_name: randallsuarez@adventureworkshkd.onmicrosoft.com
+      - user_name: randall.suarez@ibm.com
         level: CAN_MANAGE
