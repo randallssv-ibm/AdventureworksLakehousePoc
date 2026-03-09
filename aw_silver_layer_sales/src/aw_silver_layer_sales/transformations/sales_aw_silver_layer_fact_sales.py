@@ -3,10 +3,10 @@ from pyspark import pipelines as dp
 from pyspark.sql.functions import col, expr
 
 @dp.table(
-    name="fact_sales",
-    comment="Fact table with sales orders"
+    name="fact_sales_batch",
+    comment="Fact table with sales orders - raw stream before apply_changes"
 )
-def fact_sales():
+def fact_sales_raw():
     # 1. Header Stream (Watermark 5 min)
     salesOrderHeader = (
         spark.readStream.table("adventureworksbronze.sales.salesorderheader")
@@ -28,14 +28,14 @@ def fact_sales():
         .alias("a")
     )
 
-    # Join con restricciones de tiempo para manejo de estado en memoria
+    # Join with time constraints for stateful stream processing
     dfJoined = (
         salesOrderDetail.join(
             salesOrderHeader,
             expr("""
-                sod.SalesOrderID = soh.SalesOrderID AND
-                soh.ModifiedDate >= sod.ModifiedDate - interval 2 minutes AND
-                soh.ModifiedDate <= sod.ModifiedDate + interval 5 minutes
+                sod.SalesOrderID = soh.SalesOrderID 
+                AND soh.ModifiedDate >= sod.ModifiedDate - interval 2 minutes 
+                AND soh.ModifiedDate <= sod.ModifiedDate + interval 5 minutes
             """),
             "left"
         ).join(
@@ -49,7 +49,7 @@ def fact_sales():
         )
     )
 
-    # Proyección Final: Nombres de salida en snake_case
+    # Final projection in snake_case
     return dfJoined.select(
         col("sod.SalesOrderID").alias("sales_order_id"),
         col("sod.SalesOrderDetailID").alias("sales_order_detail_id"),
@@ -66,5 +66,18 @@ def fact_sales():
         col("soh.SubTotal").alias("sub_total"),
         col("soh.TaxAmt").alias("tax_amt"),
         col("soh.Freight").alias("freight"),
-        col("soh.TotalDue").alias("total_due")
+        col("soh.TotalDue").alias("total_due"),
+        col("soh.ModifiedDate").alias("modified_date")  # needed as sequence for apply_changes
     )
+
+
+# SCD Type 1 — overwrites existing rows on key match (no history retained)
+dp.apply_changes(
+    target="fact_sales",
+    source="fact_sales_batch",
+    keys=["sales_order_detail_id"],           # grain of the fact: one row per detail line
+    sequence_by="modified_date",              # latest ModifiedDate wins
+    apply_as_truncate_and_insert=False,        # SCD1: upsert, not full reload
+    stored_as_scd_type=1,                     # overwrite on change
+    comment="Fact table with sales orders, SCD Type 1 upsert via apply_changes"
+)
