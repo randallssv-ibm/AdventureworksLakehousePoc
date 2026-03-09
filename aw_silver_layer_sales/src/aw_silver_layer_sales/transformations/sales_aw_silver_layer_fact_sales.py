@@ -23,7 +23,7 @@ def fact_sales():
 
     # 3. Address Stream (Watermark 5 min)
     address = (
-        spark.readStream.table("dev_bronze.stg_person.stg_address")
+        spark.readStream.table("adventureworksbronze.person.address")
         .withWatermark("ModifiedDate", "5 minutes")
         .alias("a")
     )
