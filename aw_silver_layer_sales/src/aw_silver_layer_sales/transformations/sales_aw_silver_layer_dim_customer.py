@@ -7,8 +7,8 @@ from pyspark.sql.functions import col, concat_ws, trim, regexp_replace, coalesce
 )
 def dim_individual_customer():
     # 1. Read from the bronze layer tables 
-    customer_df = spark.readStream.option("readChangeFeed", "True").table("dev_bronze.stg_sales.stg_customer")
-    person_df = spark.readStream.option("readChangeFeed", "True").table("dev_bronze.stg_person.stg_person")
+    customer_df = spark.readStream.option("readChangeFeed", "True").table("adventureworksbronze.sales.customer")
+    person_df = spark.readStream.option("readChangeFeed", "True").table("adventureworksbronze.person.person")
 
     # 2. Join and Transform 
     return (

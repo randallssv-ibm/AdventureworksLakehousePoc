@@ -9,14 +9,14 @@ from pyspark.sql.functions import col, expr
 def fact_sales():
     # 1. Header Stream (Watermark 5 min)
     salesOrderHeader = (
-        spark.readStream.table("dev_bronze.stg_sales.stg_salesorderheader")
+        spark.readStream.table("adventureworksbronze.sales.salesorderheader")
         .withWatermark("ModifiedDate", "5 minutes")
         .alias("soh")
     )
 
     # 2. Detail Stream (Watermark 5 min)
     salesOrderDetail = (
-        spark.readStream.table("dev_bronze.stg_sales.stg_salesorderdetail")
+        spark.readStream.table("adventureworksbronze.sales.salesorderdetail")
         .withWatermark("ModifiedDate", "5 minutes")
         .alias("sod")
     )
