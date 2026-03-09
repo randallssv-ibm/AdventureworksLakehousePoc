@@ -2,6 +2,7 @@ from pyspark.sql import functions as F
 from pyspark import pipelines as dp
 from pyspark.sql.functions import col, expr
 
+
 @dp.table(
     name="fact_sales_batch",
     comment="Fact table with sales orders - raw stream before apply_changes"
@@ -69,15 +70,15 @@ def fact_sales_raw():
         col("soh.TotalDue").alias("total_due"),
         col("soh.ModifiedDate").alias("modified_date")  # needed as sequence for apply_changes
     )
+    
+# 2. Declare CDC target
+dp.create_streaming_table("fact_sales")
 
-
-# SCD Type 1 — overwrites existing rows on key match (no history retained)
-dp.apply_changes(
+# 3. CDC flow — exact valid params from docs
+dp.create_auto_cdc_flow(
     target="fact_sales",
     source="fact_sales_batch",
-    keys=["sales_order_detail_id"],           # grain of the fact: one row per detail line
-    sequence_by="modified_date",              # latest ModifiedDate wins
-    apply_as_truncate_and_insert=False,        # SCD1: upsert, not full reload
-    stored_as_scd_type=1,                     # overwrite on change
-    comment="Fact table with sales orders, SCD Type 1 upsert via apply_changes"
+    keys=["sales_order_detail_id"],
+    sequence_by=col("modified_date"),
+    stored_as_scd_type=1
 )
