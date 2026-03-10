@@ -8,6 +8,7 @@ from pyspark.sql.types import *
 # ============================================================
 @dp.table(
     name="raw_noaa_weather_station_index",
+    table_properties={"quality": "bronze"},
     comment="NOAA weather station index - matches Snowflake structure"
 )
 def noaa_weather_station_index():

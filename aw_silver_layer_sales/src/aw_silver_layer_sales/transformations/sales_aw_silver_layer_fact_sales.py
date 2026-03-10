@@ -3,7 +3,7 @@ from pyspark import pipelines as dp
 from pyspark.sql.functions import col, expr
 
 
-@dp.table(
+@dp.temporary_view(
     name="fact_sales_batch",
     comment="Fact table with sales orders - raw stream before apply_changes"
 )

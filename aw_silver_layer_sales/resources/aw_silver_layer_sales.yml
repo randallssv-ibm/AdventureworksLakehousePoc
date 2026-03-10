@@ -1,17 +1,17 @@
-# The main pipeline for aw_silver_layer_sales
+# The main pipeline for CommercialSilver
 
 resources:
   pipelines:
-    aw_silver_layer_sales:
-      name: aw_silver_layer_sales
+    CommercialSilver:
+      name: CommercialSilver
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
-      root_path: "../src/aw_silver_layer_sales"
+      root_path: "../src/CommercialSilver"
 
       libraries:
         - glob:
-            include: ../src/aw_silver_layer_sales/transformations/**
+            include: ../src/CommercialSilver/transformations/**
 
       environment:
         dependencies:
