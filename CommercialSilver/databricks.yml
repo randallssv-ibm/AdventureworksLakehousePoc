@@ -26,7 +26,7 @@ targets:
     workspace:
       host: https://adb-7405607848397610.10.azuredatabricks.net
     variables:
-      catalog: CommercialSilver
+      catalog: commercialsilver
       schema: sales
   prod:
     mode: production
@@ -34,7 +34,7 @@ targets:
       host: https://adb-7405607848397610.10.azuredatabricks.net
       root_path: /Workspace/Users/randall.suarez@ibmconsultinghakkoda.onmicrosoft.com/.bundle/${bundle.name}/${bundle.target}
     variables:
-      catalog: CommercialSilver
+      catalog: commercialsilver
       schema: sales
     permissions:
       - user_name: randall.suarez@ibmconsultinghakkoda.onmicrosoft.com
