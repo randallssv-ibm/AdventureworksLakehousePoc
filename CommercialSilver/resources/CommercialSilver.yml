@@ -10,7 +10,7 @@ resources:
 
       libraries:
         - glob:
-            include: /src/transformations/**
+            include: ../src/CommercialSilver/transformations/** 
 
       environment:
         dependencies:
