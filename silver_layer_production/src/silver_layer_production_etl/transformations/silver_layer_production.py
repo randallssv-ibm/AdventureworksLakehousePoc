@@ -8,13 +8,13 @@ from pyspark.sql import functions as F
 def dim_product():
     # 1. El Stream principal (Driving table)
     product = (
-        spark.readStream.table("dev_bronze.stg_production.stg_product")
+        spark.readStream.table("adventureworksbronze.production.product")
         .alias("p")
     )
 
     # 2. Lookups estáticos para evitar errores de Stream-Stream Join
-    product_subcategory = dp.read("dev_bronze.stg_production.stg_productsubcategory").alias("ps")
-    product_category = dp.read("dev_bronze.stg_production.stg_productcategory").alias("pc")
+    product_subcategory = dp.read("adventureworksbronze.production.productsubcategory").alias("ps")
+    product_category = dp.read("adventureworksbronze.production.productcategory").alias("pc")
 
     # 3. Transformación y Joins
     return (

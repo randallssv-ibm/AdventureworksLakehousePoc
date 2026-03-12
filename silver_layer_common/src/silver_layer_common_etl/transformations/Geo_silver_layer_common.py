@@ -7,8 +7,8 @@ from pyspark import pipelines as dp
 )
 def fact_weather():
     #aggregate by state_geo_id and date
-    ts = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_metrics_timeseries").alias("ts")
-    idx = spark.read.table("dev_bronze.stg_noaa.raw_noaa_weather_us_stations").alias("idx")
+    ts = spark.read.table("noaabronze.stg_noaa.raw_noaa_weather_metrics_timeseries").alias("ts")
+    idx = spark.read.table("noaabronze.stg_noaa.raw_noaa_weather_us_stations").alias("idx")
     
     weather = ts.join(
         idx,
