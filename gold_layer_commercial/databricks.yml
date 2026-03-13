@@ -1,8 +1,8 @@
-# This is a Databricks asset bundle definition for aw_silver_layer_models.
+# This is a Databricks asset bundle definition for gold_layer_commercial.
 # See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
 bundle:
-  name: CommercialSilver
-  uuid: 301b0e25-7497-434a-837f-fba12dfa4a05
+  name: gold_layer_commercial
+  uuid: 8a8cd424-ca34-4582-b916-ccaf33306084
 
 include:
   - resources/*.yml
@@ -26,15 +26,16 @@ targets:
     workspace:
       host: https://adb-7405607848397610.10.azuredatabricks.net
     variables:
-      catalog: commercialsilver
+      catalog: commercialgold
       schema: sales
   prod:
     mode: production
     workspace:
       host: https://adb-7405607848397610.10.azuredatabricks.net
+      # We explicitly deploy to /Workspace/Users/randall.suarez@ibmconsultinghakkoda.onmicrosoft.com to make sure we only have a single copy.
       root_path: /Workspace/Users/randall.suarez@ibmconsultinghakkoda.onmicrosoft.com/.bundle/${bundle.name}/${bundle.target}
     variables:
-      catalog: commercialsilver
+      catalog: commercialgold
       schema: sales
     permissions:
       - user_name: randall.suarez@ibmconsultinghakkoda.onmicrosoft.com

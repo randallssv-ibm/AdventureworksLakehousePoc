@@ -2,7 +2,7 @@ from pyspark.sql import functions as F
 from pyspark import pipelines as dp
 from pyspark.sql.functions import col
 
-spark.conf.set("pipelines.incompatibleViewCheck.enabled", "false")
+#spark.conf.set("pipelines.incompatibleViewCheck.enabled", "false")
 
 
 @dp.temporary_view(

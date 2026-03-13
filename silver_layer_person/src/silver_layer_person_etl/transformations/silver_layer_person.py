@@ -15,8 +15,8 @@ def silver_layer_person():
         .withWatermark("ModifiedDate", "5 minutes")
         .alias("a")
     )
-    state_province = dp.read("adventureworksbronze.person.stg_stateprovince").alias("sp")
-    country_region = dp.read("adventureworksbronze.person.stg_countryregion").alias("cr")
+    state_province = dp.read("adventureworksbronze.person.stateprovince").alias("sp")
+    country_region = dp.read("adventureworksbronze.person.countryregion").alias("cr")
 
     # 3. Join and Select
     return (
