@@ -26,55 +26,28 @@ from pyspark.sql.functions import col
 # ============================================================
 
 
-@dp.temporary_table(
-    name="state_geography_mapping",
-    quality="silver",
-    description=(
-        "Maps US state abbreviation to a representative geography_key from dim_geo. "
-        "Bridges the state-level NOAA grain in silver to the address-level geography dimension. "
-        "Uses MAX geography_key per state to pick a deterministic representative key."
-    ),
-)
+@dp.temporary_view(name="state_geography_mapping")
 def state_geography_mapping():
-    # dim_geo has city/postal_code level geography; we aggregate to state level
-    # state_province in dim_geo holds the 2-letter abbreviation (e.g. 'WA', 'CA')
-    dg = spark.read.table("personsilver.address.dim_geo")
-
+    # dim_geo already has state_province_code (2-letter, e.g. "WA", "OR")
+    # which matches state_geo_id in commonsilver.climate.fact_weather directly.
+    # Aggregate to state level: one representative geography_key per state code.
     return (
-        dg
+        spark.read.table("personsilver.address.dim_geo")
         .filter(F.col("country_region") == "United States")
-        .groupBy(F.col("state_province"))
+        .groupBy(F.col("state_province_code"))
         .agg(F.max(F.col("geography_key")).alias("geography_key"))
-        .withColumnRenamed("state_province", "state_abbr")
+        .withColumnRenamed("state_province_code", "state_geo_id")
     )
 
 
-@dp.table(
-    name="fact_weather_gold",
-    quality="gold",
-    description=(
-        "Gold weather fact table — NOAA climate observations enriched with geography dimension key. "
-        "Grain: one row per US state per date. "
-        "Source: commonsilver.climate.fact_weather joined with state_geography_mapping."
-    ),
-)
+@dp.table(name="fact_weather_gold")
 def fact_weather_gold():
-    # Silver weather fact (state + date grain)
     fw  = spark.read.table("commonsilver.climate.fact_weather").alias("fw")
-
-    # State-level geography lookup (temporary table defined above)
     sgm = spark.read.table("state_geography_mapping").alias("sgm")
 
-    # state_geo_id in the NOAA data has format "state/US-WA"
-    # Extract the 2-letter state abbreviation from the trailing segment
-    fw_with_state = fw.withColumn(
-        "state_abbr",
-        F.regexp_extract(F.col("fw.state_geo_id"), r"([A-Z]{2})$", 1)
-    )
-
     return (
-        fw_with_state
-        .join(sgm, F.col("state_abbr") == F.col("sgm.state_abbr"), "left")
+        fw
+        .join(sgm, fw.state_geo_id == sgm.state_geo_id, "left")
         .select(
             F.col("sgm.geography_key"),
             F.col("fw.state_geo_id"),           # retain for lineage / debugging
