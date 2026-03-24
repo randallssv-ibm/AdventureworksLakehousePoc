@@ -27,7 +27,7 @@ targets:
       host: https://adb-7405607848397610.10.azuredatabricks.net
     variables:
       catalog: commongold
-      schema: dev
+      schema: climate
   prod:
     mode: production
     workspace:
