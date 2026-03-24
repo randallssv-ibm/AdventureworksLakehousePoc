@@ -1,17 +1,17 @@
-# The main pipeline for noaa_bronze_layer
+# The main pipeline for gold_layer_commercial
 
 resources:
   pipelines:
-    noaa_bronze_layer_etl:
-      name: noaa_bronze_layer_etl
+    gold_layer_commercial_etl:
+      name: gold_layer_commercial_etl
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
-      root_path: "../src/noaa_bronze_layer_etl"
+      root_path: "../src/gold_layer_commercial_etl"
 
       libraries:
         - glob:
-            include: ../src/noaa_bronze_layer_etl/transformations/**
+            include: ../src/gold_layer_commercial_etl/transformations/**
 
       environment:
         dependencies:

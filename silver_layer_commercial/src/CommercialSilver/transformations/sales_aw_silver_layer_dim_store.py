@@ -8,7 +8,7 @@ from pyspark.sql.functions import col, greatest, expr
 def dim_store_watermarked():
     # 1. Customer Stream: 5-minute threshold for late data
     customer_df = (
-        spark.readStream.table("dev_bronze.stg_sales.stg_customer")
+        spark.readStream.table("adventureworksbronze.sales.customer")
         .withWatermark("ModifiedDate", "5 minutes")
         .alias("c")
     )
@@ -16,7 +16,7 @@ def dim_store_watermarked():
 
     # 2. Store Stream: 5-minute threshold for late data
     store_df = (
-        spark.readStream.table("dev_bronze.stg_sales.stg_store")
+        spark.readStream.table("adventureworksbronze.sales.store")
         .withWatermark("ModifiedDate", "5 minutes")
         .alias("s")
     )

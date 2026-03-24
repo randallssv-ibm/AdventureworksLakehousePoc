@@ -24,19 +24,19 @@ targets:
     mode: development
     default: true
     workspace:
-      host: https://adb-7405616585742809.9.azuredatabricks.net
+      host: https://adb-7405607848397610.10.azuredatabricks.net
     variables:
-      catalog: dev_silver
-      schema: person
+      catalog: personsilver
+      schema: address
   prod:
     mode: production
     workspace:
-      host: https://adb-7405616585742809.9.azuredatabricks.net
+      host: https://adb-7405607848397610.10.azuredatabricks.net
       # We explicitly deploy to /Workspace/Users/randallsuarez@adventureworkshkd.onmicrosoft.com to make sure we only have a single copy.
-      root_path: /Workspace/Users/randallsuarez@adventureworkshkd.onmicrosoft.com/.bundle/${bundle.name}/${bundle.target}
+      root_path: /Workspace/Users/randall.suarez@ibmconsultinghakkoda.onmicrosoft.com.bundle/${bundle.name}/${bundle.target}
     variables:
-      catalog: dev_silver
-      schema: person
+      catalog: personsilver
+      schema: address
     permissions:
-      - user_name: randallsuarez@adventureworkshkd.onmicrosoft.com
+      - user_name: randall.suarez@ibmconsultinghakkoda.onmicrosoft.com.bundle
         level: CAN_MANAGE

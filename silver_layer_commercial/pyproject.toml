@@ -1,5 +1,5 @@
 [project]
-name = "silver_layer_production"
+name = "CommercialSilver"
 version = "0.0.1"
 authors = [{ name = "randall.suarez@ibmconsultinghakkoda.onmicrosoft.com" }]
 requires-python = ">=3.10,<3.13"
@@ -21,7 +21,7 @@ dev = [
 ]
 
 [project.scripts]
-main = "silver_layer_production.main:main"
+main = "CommercialSilver.main:main"
 
 [build-system]
 requires = ["hatchling"]

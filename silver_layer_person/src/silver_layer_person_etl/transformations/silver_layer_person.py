@@ -11,12 +11,12 @@ def silver_layer_person():
     #readings from bronze
     # 1. ONLY Address is a stream (The driving table)
     address = (
-        spark.readStream.table("dev_bronze.stg_person.stg_address")
+        spark.readStream.table("adventureworksbronze.person.address")
         .withWatermark("ModifiedDate", "5 minutes")
         .alias("a")
     )
-    state_province = dp.read("dev_bronze.stg_person.stg_stateprovince").alias("sp")
-    country_region = dp.read("dev_bronze.stg_person.stg_countryregion").alias("cr")
+    state_province = dp.read("adventureworksbronze.person.stateprovince").alias("sp")
+    country_region = dp.read("adventureworksbronze.person.countryregion").alias("cr")
 
     # 3. Join and Select
     return (
