@@ -1,0 +1,18 @@
+# The main pipeline for gold_layer_person
+
+resources:
+  pipelines:
+    gold_layer_person_etl:
+      name: gold_layer_person_etl
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      root_path: "../src/gold_layer_person_etl"
+
+      libraries:
+        - glob:
+            include: ../src/gold_layer_person_etl/transformations/**
+
+      environment:
+        dependencies:
+          - --editable ${workspace.file_path}

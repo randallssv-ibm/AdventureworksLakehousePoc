@@ -1,0 +1,36 @@
+# This is a Databricks asset bundle definition for gold_layer_person.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: gold_layer_person
+  uuid: e4f7a2c9-1b3d-4e6f-8a0c-5d9b2e7f4a1c
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+variables:
+  catalog:
+    description: The catalog to use
+  schema:
+    description: The schema to use
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405607848397610.10.azuredatabricks.net
+    variables:
+      catalog: persongold
+      schema: address
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-7405607848397610.10.azuredatabricks.net
+      root_path: /Workspace/Users/randall.suarez@ibmconsultinghakkoda.onmicrosoft.com/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: persongold
+      schema: address
+    permissions:
+      - user_name: randall.suarez@ibmconsultinghakkoda.onmicrosoft.com
+        level: CAN_MANAGE
