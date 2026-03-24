@@ -1,12 +1,8 @@
 from pyspark import pipelines as dp
-from pyspark.sql.functions import col
+from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
-@dp.temporary_table(
-    name="geography_mapping",
-    quality="silver",
-    description="Sales aggregations",
-)
+@dp.temporary_view()
 def geography_mapping():
     # Load the base table
     df = spark.read.table("personsilver.address.dim_geo")
@@ -18,7 +14,7 @@ def geography_mapping():
 
     # Add the geography_key as a new column using the window function
     df_transformed = df.withColumn(
-        "geography_key", 
+        "natural_geography_key", 
         F.max("geography_key").over(window_spec)
     )
 
@@ -27,11 +23,7 @@ def geography_mapping():
 
 
 
-@dp.table(
-    name="fact_sales_gold",
-    quality="gold",
-    description="Sales aggregations",
-)
+@dp.table()
 def fact_sales():
     # 1. Loading the tables using your standard spark.read.table approach
     fs = spark.read.table("commercialsilver.sales.fact_sales")
@@ -69,5 +61,4 @@ def fact_sales():
         F.col("fs.sub_total"),
         F.col("fs.tax_amt"),
         F.col("fs.freight"),
-        F.col("fs.total_due")
-    )
+        F.col("fs.total_due"))
