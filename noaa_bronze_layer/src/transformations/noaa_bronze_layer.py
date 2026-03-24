@@ -9,8 +9,12 @@ from pyspark.sql.types import *
 @dp.table(
     name="raw_noaa_weather_station_index",
 <<<<<<< HEAD:noaa_bronze_layer/src/transformations/noaa_bronze_layer.py
+<<<<<<< HEAD:noaa_bronze_layer/src/transformations/noaa_bronze_layer.py
     table_properties={"quality": "bronze"},
     comment="NOAA weather station index - matches Snowflake structure"
+=======
+    comment="NOAA weather station index"
+>>>>>>> origin/main:noaa_bronze_layer/src/noaa_bronze_layer_etl/transformations/noaa_bronze_layer.py
 =======
     comment="NOAA weather station index"
 >>>>>>> origin/main:noaa_bronze_layer/src/noaa_bronze_layer_etl/transformations/noaa_bronze_layer.py
