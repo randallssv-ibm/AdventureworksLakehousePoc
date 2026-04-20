@@ -47,7 +47,7 @@ _WEATHER_SCHEMA = StructType([
     StructField("extreme_heat_flag", BooleanType(), False),
 ])
 
-_TARGET_TABLE = "hack2build.bronze.weather_noaa"
+_TARGET_TABLE = "h2b_bdc_weather.weather.weather"
 
 # ---------------------------------------------------------------------------
 # Sinusoidal baseline helpers
